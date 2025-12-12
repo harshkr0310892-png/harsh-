@@ -746,37 +746,39 @@ export default function AdminDashboard() {
 
       <main className="container mx-auto px-4 py-8">
         <Tabs defaultValue="products" className="space-y-6">
-          <TabsList className="flex w-full gap-2 overflow-x-auto no-scrollbar px-2 -mx-4 sm:mx-0 scroll-px-2">
-            <TabsTrigger value="products" className="flex min-w-fit items-center gap-2 whitespace-nowrap">
-              <Package className="w-4 h-4" />
-              Products
-            </TabsTrigger>
-            <TabsTrigger value="categories" className="flex min-w-fit items-center gap-2 whitespace-nowrap">
-              <FolderOpen className="w-4 h-4" />
-              Categories
-            </TabsTrigger>
-            <TabsTrigger value="attributes" className="flex min-w-fit items-center gap-2 whitespace-nowrap">
-              <Tag className="w-4 h-4" />
-              Attributes
-            </TabsTrigger>
-            <TabsTrigger value="orders" className="flex min-w-fit items-center gap-2 whitespace-nowrap">
-              <ShoppingBag className="w-4 h-4" />
-              Orders
-              {orders && orders.length > 0 && (
-                <span className="ml-1 px-2 py-0.5 text-xs rounded-full gradient-gold text-primary-foreground">
-                  {orders.filter(o => o.status === 'pending').length}
-                </span>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="coupons" className="flex min-w-fit items-center gap-2 whitespace-nowrap">
-              <Ticket className="w-4 h-4" />
-              Coupons
-            </TabsTrigger>
-            <TabsTrigger value="sales" className="flex min-w-fit items-center gap-2 whitespace-nowrap">
-              <TrendingUp className="w-4 h-4" />
-              Sales
-            </TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+            <TabsList className="flex w-full gap-2 min-w-max">
+              <TabsTrigger value="products" className="flex items-center gap-2 whitespace-nowrap">
+                <Package className="w-4 h-4" />
+                Products
+              </TabsTrigger>
+              <TabsTrigger value="categories" className="flex items-center gap-2 whitespace-nowrap">
+                <FolderOpen className="w-4 h-4" />
+                Categories
+              </TabsTrigger>
+              <TabsTrigger value="attributes" className="flex items-center gap-2 whitespace-nowrap">
+                <Tag className="w-4 h-4" />
+                Attributes
+              </TabsTrigger>
+              <TabsTrigger value="orders" className="flex items-center gap-2 whitespace-nowrap">
+                <ShoppingBag className="w-4 h-4" />
+                Orders
+                {orders && orders.length > 0 && (
+                  <span className="ml-1 px-2 py-0.5 text-xs rounded-full gradient-gold text-primary-foreground">
+                    {orders.filter(o => o.status === 'pending').length}
+                  </span>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="coupons" className="flex items-center gap-2 whitespace-nowrap">
+                <Ticket className="w-4 h-4" />
+                Coupons
+              </TabsTrigger>
+              <TabsTrigger value="sales" className="flex items-center gap-2 whitespace-nowrap">
+                <TrendingUp className="w-4 h-4" />
+                Sales
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           {/* Products Tab */}
           <TabsContent value="products" className="space-y-6">
