@@ -39,6 +39,7 @@ export default function Checkout() {
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
   const [applyingCoupon, setApplyingCoupon] = useState(false);
   const [agreePolicies, setAgreePolicies] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'online' | 'cod'>('online');
   
   const [formData, setFormData] = useState({
     name: '',
@@ -140,6 +141,13 @@ export default function Checkout() {
       return;
     }
 
+    // Ensure COD is eligible for all items when selected
+    const codEligible = items.every((it) => it.cash_on_delivery === true);
+    if (paymentMethod === 'cod' && !codEligible) {
+      toast.error('Cash on Delivery is not available for some items in your cart.');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -156,6 +164,7 @@ export default function Checkout() {
           customer_address: formData.address,
           total: total,
           status: 'pending',
+          payment_method: paymentMethod,
         })
         .select()
         .single();
@@ -165,10 +174,17 @@ export default function Checkout() {
       // Create order items
       const orderItems = items.map((item) => ({
         order_id: order.id,
-        product_id: item.id,
+        product_id: (item as any).product_id || item.id,
         product_name: item.name,
         product_price: item.price * (1 - item.discount_percentage / 100),
         quantity: item.quantity,
+        variant_info: item.variant_info
+          ? {
+              variant_id: (item.variant_info as any).variant_id || null,
+              attribute_name: (item.variant_info as any).attribute_name || (item.variant_info as any).attribute || null,
+              value_name: (item.variant_info as any).value_name || (item.variant_info as any).attribute_value || null,
+            }
+          : null,
       }));
 
       const { error: itemsError } = await supabase
@@ -346,6 +362,39 @@ export default function Checkout() {
                     className="mt-1"
                     rows={4}
                   />
+                </div>
+              </div>
+
+              {/* Payment Method */}
+              <div className="border-t border-border mt-6 pt-6">
+                <h3 className="font-medium mb-3">Payment Method</h3>
+                <div className="flex flex-col gap-3">
+                  <label className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="online"
+                      checked={paymentMethod === 'online'}
+                      onChange={() => setPaymentMethod('online')}
+                      className="accent-primary"
+                    />
+                    <span>Online Payment (Available for all products)</span>
+                  </label>
+                  <label className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="cod"
+                      checked={paymentMethod === 'cod'}
+                      onChange={() => setPaymentMethod('cod')}
+                      disabled={!items.every((it) => it.cash_on_delivery === true)}
+                      className="accent-primary"
+                    />
+                    <span>Cash on Delivery (Only for eligible products)</span>
+                  </label>
+                  {!items.every((it) => it.cash_on_delivery === true) && (
+                    <p className="text-sm text-muted-foreground">Cash on Delivery is not available for some items in your cart.</p>
+                  )}
                 </div>
               </div>
             </div>

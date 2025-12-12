@@ -75,7 +75,7 @@ export default function Cart() {
                   {/* Details */}
                   <div className="flex-1 min-w-0">
                     <Link 
-                      to={`/product/${item.id}`}
+                      to={`/product/${item.product_id || item.id}`}
                       className="font-display text-lg font-semibold hover:text-primary transition-colors line-clamp-1"
                     >
                       {item.name}

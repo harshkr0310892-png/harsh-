@@ -75,6 +75,7 @@ export default function ProductDetail() {
           attribute_name: selectedVariant.attribute_name,
           attribute_value: selectedVariant.value_name,
         } : undefined,
+        cash_on_delivery: product.cash_on_delivery || false,
       });
     }
     toast.success(`Added ${quantity} ${product.name}${selectedVariant ? ` (${selectedVariant.value_name})` : ''} to cart!`);

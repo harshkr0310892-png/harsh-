@@ -15,6 +15,7 @@ interface ProductCardProps {
   stock_status: string;
   stock_quantity?: number | null;
   index?: number;
+  cash_on_delivery?: boolean;
 }
 
 export function ProductCard({ 
@@ -44,6 +45,7 @@ export function ProductCard({
       price,
       discount_percentage,
       image_url: displayImage,
+      cash_on_delivery: cash_on_delivery,
     });
     toast.success(`${name} added to cart!`);
   };

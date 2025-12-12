@@ -136,6 +136,7 @@ export default function Products() {
                 price={Number(product.price)}
                 discount_percentage={product.discount_percentage || 0}
                 image_url={product.image_url}
+                cash_on_delivery={product.cash_on_delivery}
                 stock_status={product.stock_status}
                 index={index}
               />

@@ -39,6 +39,7 @@ interface Product {
   stock_quantity: number | null;
   category_id: string | null;
   created_at: string;
+  cash_on_delivery?: boolean;
 }
 
 interface Category {
@@ -133,6 +134,7 @@ export default function AdminDashboard() {
     stock_status: 'in_stock',
     stock_quantity: '0',
     category_id: '',
+    cash_on_delivery: false,
   });
   const [categoryForm, setCategoryForm] = useState({
     name: '',
@@ -408,6 +410,7 @@ export default function AdminDashboard() {
         stock_status: product.stock_status,
         stock_quantity: parseInt(product.stock_quantity) || 0,
         category_id: product.category_id || null,
+        cash_on_delivery: product.cash_on_delivery || false,
       };
 
       if (product.id) {
@@ -597,6 +600,7 @@ export default function AdminDashboard() {
       stock_status: 'in_stock',
       stock_quantity: '0',
       category_id: '',
+      cash_on_delivery: false,
     });
     setProductImages([]);
     setEditingProduct(null);
@@ -625,6 +629,7 @@ export default function AdminDashboard() {
       stock_status: product.stock_status,
       stock_quantity: (product.stock_quantity || 0).toString(),
       category_id: product.category_id || '',
+      cash_on_delivery: product.cash_on_delivery || false,
     });
     setProductImages(product.images || (product.image_url ? [product.image_url] : []));
     setProductDialogOpen(true);
@@ -902,6 +907,10 @@ export default function AdminDashboard() {
                           </SelectContent>
                         </Select>
                       </div>
+                      <div className="flex items-center gap-3 pt-6">
+                        <Switch checked={productForm.cash_on_delivery} onCheckedChange={(checked) => setProductForm({ ...productForm, cash_on_delivery: Boolean(checked) })} />
+                        <Label>Enable Cash on Delivery</Label>
+                      </div>
                       <div>
                         <Label>Product Images (Max 8)</Label>
                         <div className="mt-2 space-y-3">
@@ -1089,7 +1098,7 @@ export default function AdminDashboard() {
                       <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                         <div>
                           <p className="text-sm text-muted-foreground">Order ID</p>
-                          <p className="font-display text-lg font-bold text-primary">
+                          <p className="font-display text-xl font-bold text-black">
                             {order.order_id}
                           </p>
                           {order.status === 'cancelled' && (
@@ -1127,14 +1136,14 @@ export default function AdminDashboard() {
                                   </div>
                                 )}
                                 <div className="flex-1 min-w-0">
-                                  <p className="font-medium text-sm truncate">{item.product_name}</p>
+                                  <p className="font-medium text-base truncate text-black">{item.product_name}</p>
                                   {item.variant_info && item.variant_info.attribute_name && (
-                                    <p className="text-xs text-primary font-medium">
+                                    <p className="text-sm text-black font-medium">
                                       {item.variant_info.attribute_name}: {item.variant_info.value_name}
                                     </p>
                                   )}
                                   {product?.description && (
-                                    <p className="text-xs text-muted-foreground line-clamp-1">{product.description}</p>
+                                    <p className="text-sm text-muted-foreground line-clamp-1">{product.description}</p>
                                   )}
                                   <p className="text-sm text-muted-foreground">
                                     ₹{Number(item.product_price).toFixed(2)} × {item.quantity}
@@ -1149,12 +1158,12 @@ export default function AdminDashboard() {
                       <div className="grid sm:grid-cols-2 gap-4 mb-4">
                         <div>
                           <p className="text-sm text-muted-foreground">Customer</p>
-                          <p className="font-medium">{order.customer_name}</p>
+                          <p className="font-semibold text-base text-black">{order.customer_name}</p>
                           <p className="text-sm text-muted-foreground">{order.customer_phone}</p>
                         </div>
                         <div>
                           <p className="text-sm text-muted-foreground">Address</p>
-                          <p className="text-sm">{order.customer_address}</p>
+                          <p className="text-sm text-black">{order.customer_address}</p>
                         </div>
                       </div>
 

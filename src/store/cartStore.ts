@@ -2,11 +2,15 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export interface CartItem {
+  // `id` is the cart line id (product id or productId#variantId)
   id: string;
+  // `product_id` is the original product id
+  product_id?: string;
   name: string;
   price: number;
   discount_percentage: number;
   image_url: string | null;
+  cash_on_delivery?: boolean;
   quantity: number;
   variant_info?: {
     variant_id: string;
@@ -33,15 +37,27 @@ export const useCartStore = create<CartStore>()(
       
       addItem: (item) => {
         set((state) => {
-          const existingItem = state.items.find((i) => i.id === item.id);
+          const productId = item.product_id || item.id;
+          const variantId = item.variant_info?.variant_id || null;
+          const lineId = variantId ? `${productId}#${variantId}` : productId;
+
+          const existingItem = state.items.find((i) => i.id === lineId);
           if (existingItem) {
             return {
               items: state.items.map((i) =>
-                i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+                i.id === lineId ? { ...i, quantity: i.quantity + 1 } : i
               ),
             };
           }
-          return { items: [...state.items, { ...item, quantity: 1 }] };
+
+          const newItem: CartItem = {
+            ...item,
+            id: lineId,
+            product_id: productId,
+            quantity: 1,
+          } as CartItem;
+
+          return { items: [...state.items, newItem] };
         });
       },
       

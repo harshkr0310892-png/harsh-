@@ -171,6 +171,7 @@ export default function Index() {
                   price={Number(product.price)}
                   discount_percentage={product.discount_percentage || 0}
                   image_url={product.image_url}
+                  cash_on_delivery={product.cash_on_delivery}
                   images={product.images}
                   stock_status={product.stock_status}
                   stock_quantity={product.stock_quantity}
