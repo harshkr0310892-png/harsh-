@@ -10,7 +10,7 @@ import { useCartStore } from "@/store/cartStore";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Crown, Loader2, CheckCircle, Copy, Ticket, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, normalizeIndianMobile } from "@/lib/utils";
 import { FAQSection } from "@/components/checkout/FAQSection";
 
 function generateOrderId(): string {
@@ -131,6 +131,12 @@ export default function Checkout() {
       return;
     }
 
+    const normalizedPhone = normalizeIndianMobile(formData.phone);
+    if (!normalizedPhone) {
+      toast.error('Please enter a valid 10-digit Indian mobile number (e.g., +91XXXXXXXXXX)');
+      return;
+    }
+
     if (!agreePolicies) {
       toast.error('Please agree to the FAQs and Privacy Policy before placing your order.');
       return;
@@ -159,7 +165,7 @@ export default function Checkout() {
         .insert({
           order_id: newOrderId,
           customer_name: formData.name,
-          customer_phone: formData.phone,
+          customer_phone: `+91${normalizedPhone}`,
           customer_email: formData.email || null,
           customer_address: formData.address,
           total: total,
